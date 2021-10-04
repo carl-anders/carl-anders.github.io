@@ -16,13 +16,7 @@
                 color: var(--color-accent-text);
             }
             .chip {
-                position: relative;
-            }
-            .addon {
-                position: absolute;
-                top: 0;
-                left: 0;
-                visibility: hidden;
+                margin: 10px;
             }
             li p {
                 margin: 2px 0;
@@ -30,32 +24,73 @@
         </style>
     </head>
     <body>
-        <h1>SlimeVR schematics - Wemos D1 Mini</h1>
-        <h2>Addons:</h2>
+        <h1>SlimeVR schematics</h1>
+        <h2>Wemos D1 Mini</h2>
         <ul>
-            <li><p>Auxilliary MPU: <input type="checkbox" name="d1-aux" checked=""></p><p>- Allows for a second motion sensor to be connected</p></li>
+            <li>
+                <p>IMU:</p>
+                <p>- <input type="radio" name="d1-imu" value="bno">BNO085 - Fancy but expensive $$$</p>
+                <p>- <input type="radio" name="d1-imu" value="mpu" checked="checked">MPU6050 - Cheap but drifts quite a bit</p>
+            </li>
+            <li><p>Auxilliary MPU: <input type="checkbox" name="d1-aux"></p><p>- Allows for a second motion sensor to be connected</p></li>
             <li><p>Battery sense: <input type="checkbox" name="d1-battery-sense"></p><p>- The device is able to sense the battery life remaining</p></li>
             <li><p>Charge Diodes: <input type="checkbox" name="d1-charge-diodes"></p><p>- Makes the device safer and allows for usage even when charging</p></li>
         </ul>
-        <div class="chips-container">
-            <div class="chip">
-                <img src="pics/d1_0003_Base.png" id="d1-base">
-                <img src="pics/d1_0000_Aux.png" id="d1-aux" class="addon">
-                <img src="pics/d1_0001_Battery-Sense.png" id="d1-battery-sense" class="addon">
-                <img src="pics/d1_0002_Charge-Diodes.png" id="d1-charge-diodes" class="addon">
-            </div>
-        </div>
+        <div class="chip" id="d1"></div>
         <script>
-            let changer = (box => {
-                document.querySelector('#' + box.name).style.visibility = (box.checked ? 'visible' : 'hidden');
+            let chips = {
+                'd1': {
+                    'width': 1080,
+                    'height': 942,
+                    'base': 'd1_Base.png',
+                    'options': [
+                        [
+                            'imu',
+                            (imu) => {
+                                return (imu == 'bno' ? 'd1_BNO-Main.png' : 'd1_MPU-Main.png');
+                            }
+                        ],
+                        [
+                            'aux',
+                            () => {
+                                let box = document.querySelector("input[name='d1-imu']:checked");
+                                return (box && box.value == 'bno' ? 'd1_BNO-Aux.png' : 'd1_MPU-Aux.png');
+                            }
+                        ],
+                        [
+                            'battery-sense',
+                            "d1_Battery-Sense.png"
+                        ],
+                        [
+                            'charge-diodes',
+                            "d1_Charge-Diodes.png"
+                        ]
+                    ]
+                }
+            };
+
+            Object.entries(chips).forEach(([chip, config]) => {
+                let div = document.getElementById(chip);
+                div.style.width = config.width + 'px';
+                div.style.height = config.height + 'px';
             });
 
-            let boxes = document.querySelectorAll('input[type="checkbox"]');
-            boxes.forEach(box => {
-                changer(box);
-                box.addEventListener('change', (e) => {
-                    changer(e.target);
+            let bgGen = () => {
+                Object.entries(chips).forEach(([chip, config]) => {
+                    let bgs = [config.base];
+                    config.options.forEach(([optName, optVal]) => {
+                        let box = document.querySelector('input[name="' + chip + '-' + optName + '"]:checked');
+                        if (box) {
+                            bgs.push((optVal instanceof Function) ? optVal(box.value) : optVal);
+                        }
+                    });
+                    let div = document.getElementById(chip);
+                    div.style.background = bgs.map(bg => 'url(pics/' + bg + ')').reverse().join(",");
                 });
+            }
+            bgGen();
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', bgGen);
             });
         </script>
     </body>
