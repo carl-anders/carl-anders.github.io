@@ -13,7 +13,7 @@
                 font-family: 'Roboto', sans-serif;
                 padding: 0 15px 10px 15px;
                 max-width: 1400px;
-                min-width: 600px;
+                min-width: 640px;
             }
             h1, h2 {
                 color: var(--color-accent-text);
@@ -24,6 +24,10 @@
             }
             li p {
                 margin: 2px 0;
+            }
+            img {
+                max-width: 100%;
+                padding: 10px 0;
             }
         </style>
     </head>
@@ -41,6 +45,8 @@
             <li><p>Charge Diodes (1N5817): <input type="checkbox" name="d1-charge-diodes"></p><p>- Allows for usage even when charging, and is a useful safety measure</p></li>
         </ul>
         <div class="chip" id="d1"></div>
+        <img src="pics/IMU_ROTATIONixed.png" style="max-width: 100%;">
+        <img src="pics/d1-pins.png" style="max-width: 100%;">
         <script>
             let chips = {
                 'd1': {
