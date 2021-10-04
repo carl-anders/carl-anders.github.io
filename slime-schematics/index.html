@@ -11,12 +11,16 @@
                 background: var(--color-bg);
                 color: var(--color-text);
                 font-family: 'Roboto', sans-serif;
+                padding: 0 15px 10px 15px;
+                max-width: 1400px;
+                min-width: 600px;
             }
             h1, h2 {
                 color: var(--color-accent-text);
             }
             .chip {
-                margin: 10px;
+                position: relative;
+                width: 100%;
             }
             li p {
                 margin: 2px 0;
@@ -29,19 +33,19 @@
         <ul>
             <li>
                 <p>IMU:</p>
-                <p>- <input type="radio" name="d1-imu" value="bno">BNO085 - Fancy but expensive $$$</p>
+                <p>- <input type="radio" name="d1-imu" value="bno">BNO085 - Good but expensive $$$</p>
                 <p>- <input type="radio" name="d1-imu" value="mpu" checked="checked">MPU6050 - Cheap but drifts quite a bit</p>
             </li>
             <li><p>Auxilliary Sensor: <input type="checkbox" name="d1-aux"></p><p>- Allows for a second motion sensor to be connected</p></li>
-            <li><p>Battery sense: <input type="checkbox" name="d1-battery-sense"></p><p>- The device is able to sense the battery life remaining</p></li>
-            <li><p>Charge Diodes: <input type="checkbox" name="d1-charge-diodes"></p><p>- Makes the device safer and allows for usage even when charging</p></li>
+            <li><p>Battery sense: <input type="checkbox" name="d1-battery-sense"></p><p>- The device is able to sense the battery life remaining using a 180k resistor</p></li>
+            <li><p>Charge Diodes (1N5817): <input type="checkbox" name="d1-charge-diodes"></p><p>- Allows for usage even when charging, and is a useful safety measure</p></li>
         </ul>
         <div class="chip" id="d1"></div>
         <script>
             let chips = {
                 'd1': {
-                    'width': 1080,
-                    'height': 942,
+                    'width': 1722,
+                    'height': 1552,
                     'base': 'd1_Base.png',
                     'options': [
                         [
@@ -71,8 +75,7 @@
 
             Object.entries(chips).forEach(([chip, config]) => {
                 let div = document.getElementById(chip);
-                div.style.width = config.width + 'px';
-                div.style.height = config.height + 'px';
+                div.style.paddingTop = (config.height/config.width)*100 + '%';
             });
 
             let bgGen = () => {
@@ -85,7 +88,7 @@
                         }
                     });
                     let div = document.getElementById(chip);
-                    div.style.background = bgs.map(bg => 'url(pics/' + bg + ')').reverse().join(",");
+                    div.style.background = bgs.map(bg => 'url(pics/' + bg + ') 0 0/100% 100%').reverse().join(",");
                 });
             }
             bgGen();
