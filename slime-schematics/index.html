@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Slimevr schematics</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+            body {
+                --color-bg: #f0f5f7;
+                --color-text: #0f151d;
+                --color-accent-text: #431064;
+                background: var(--color-bg);
+                color: var(--color-text);
+                font-family: 'Roboto', sans-serif;
+            }
+            h1, h2 {
+                color: var(--color-accent-text);
+            }
+            .chip {
+                position: relative;
+            }
+            .addon {
+                position: absolute;
+                top: 0;
+                left: 0;
+                visibility: hidden;
+            }
+            li p {
+                margin: 2px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>SlimeVR schematics - Wemos D1 Mini</h1>
+        <h2>Addons:</h2>
+        <ul>
+            <li><p>Auxilliary MPU: <input type="checkbox" name="d1-aux" checked=""></p><p>- Allows for a second motion sensor to be connected</p></li>
+            <li><p>Battery sense: <input type="checkbox" name="d1-battery-sense"></p><p>- The device is able to sense the battery life remaining</p></li>
+            <li><p>Charge Diodes: <input type="checkbox" name="d1-charge-diodes"></p><p>- Makes the device safer and allows for usage even when charging</p></li>
+        </ul>
+        <div class="chips-container">
+            <div class="chip">
+                <img src="pics/d1_0003_Base.png" id="d1-base">
+                <img src="pics/d1_0000_Aux.png" id="d1-aux" class="addon">
+                <img src="pics/d1_0001_Battery-Sense.png" id="d1-battery-sense" class="addon">
+                <img src="pics/d1_0002_Charge-Diodes.png" id="d1-charge-diodes" class="addon">
+            </div>
+        </div>
+        <script>
+            let changer = (box => {
+                document.querySelector('#' + box.name).style.visibility = (box.checked ? 'visible' : 'hidden');
+            });
+
+            let boxes = document.querySelectorAll('input[type="checkbox"]');
+            boxes.forEach(box => {
+                changer(box);
+                box.addEventListener('change', (e) => {
+                    changer(e.target);
+                });
+            });
+        </script>
+    </body>
+</html>
